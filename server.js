@@ -5,10 +5,33 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.get('/api/trends', async (req, res) => {
-  const keyword = req.query.keyword || 'AI';
+  let keywords = req.query.keyword || 'AI';
+  const geo = req.query.geo || 'US';
+
+  // Normalize single vs multiple keyword inputs
+  if (!Array.isArray(keywords)) {
+    keywords = [keywords];
+  }
+
+  // Optional date range support
+  const startTime = req.query.startTime ? new Date(req.query.startTime) : undefined;
+  const endTime = req.query.endTime ? new Date(req.query.endTime) : undefined;
+
   try {
-    const results = await trends.interestOverTime({ keyword, geo: 'US' });
-    res.json(JSON.parse(results));
+    const options = {
+      keyword: keywords,
+      geo,
+      ...(startTime && { startTime }),
+      ...(endTime && { endTime }),
+    };
+
+    const results = await trends.interestOverTime(options);
+    const parsed = JSON.parse(results);
+
+    // Add count to response
+    parsed.searchedKeywordCount = keywords.length;
+
+    res.json(parsed);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
