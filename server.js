@@ -9,7 +9,11 @@ const PORT = process.env.PORT || 3001;
 app.set('query parser', (str) => qs.parse(str));
 
 app.get('/api/trends', async (req, res) => {
-  let keywords = req.query.keyword || 'AI';
+  // Log incoming query for debugging
+  console.log('Received query:', req.query);
+
+  // ✅ Accept both 'keyword' and 'keywords'
+  let keywords = req.query.keyword || req.query.keywords || 'AI';
   const geo = req.query.geo || 'US';
 
   // ✅ Normalize to array
