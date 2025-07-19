@@ -5,6 +5,9 @@ const qs = require('qs'); // ✅ Use qs instead of querystring
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ✅ Only allow these geos (US, Canada, United Kingdom)
+const allowedGeos = ['US', 'CA', 'GB'];
+
 // ✅ Correct parser for repeated query params like keyword=a&keyword=b
 app.set('query parser', (str) => qs.parse(str));
 
@@ -14,7 +17,13 @@ app.get('/api/trends', async (req, res) => {
 
   // ✅ Accept both 'keyword' and 'keywords'
   let keywords = req.query.keyword || req.query.keywords || 'AI';
-  const geo = req.query.geo || 'US';
+  let geo = req.query.geo || 'US';
+
+  // ✅ Restrict geo to allowed list, fallback to US if not allowed
+  if (!allowedGeos.includes(geo)) {
+    console.log(`Geo '${geo}' not allowed, defaulting to 'US'`);
+    geo = 'US';
+  }
 
   // ✅ Normalize to array
   if (!Array.isArray(keywords)) {
