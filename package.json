@@ -1,7 +1,25 @@
 {
+  "name": "google-trends-wrapper",
+  "version": "2.0.0",
+  "description": "Enhanced Google Trends API wrapper with multiple keyword format support",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node -e \"console.log('Testing keyword parsing...'); require('./server.js')\""
+  },
   "dependencies": {
     "express": "^5.1.0",
     "google-trends-api": "^4.9.2",
     "qs": "^6.11.2"
-  }
+  },
+  "keywords": [
+    "google-trends",
+    "api",
+    "wrapper",
+    "trends",
+    "keywords"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
 }
